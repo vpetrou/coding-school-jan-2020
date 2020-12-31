@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="b3e8d84b-e7b9-4db6-bad5-af3b8dfdc6d5" activeEnvironment="Default" name="SOAP-SrvTests" resourceRoot="" soapui-version="5.5.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="390c97a3-d8fe-440f-a31d-bac6b415bb67" wsaVersion="NONE" name="ContactsPortSoap11" type="wsdl" bindingName="{http://www.vpetrou.com/article-ws}ContactsPortSoap11" soapVersion="1_1" anonymous="optional" definition="http://localhost:7001/soapws/contacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:7001/soapws/contacts.wsdl"><con:part><con:url>http://localhost:7001/soapws/contacts.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.vpetrou.com/article-ws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://www.vpetrou.com/contact-ws" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.vpetrou.com/article-ws">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://www.vpetrou.com/contact-ws" xmlns:tns="http://www.vpetrou.com/contact-ws" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:simpleType name="cities">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Athens"/>
+          <xs:enumeration value="Thessaloniki"/>
+          <xs:enumeration value="Patra"/>
+          <xs:enumeration value="Kavala"/>
+          <xs:enumeration value="Serres"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="genders">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="m"/>
+          <xs:enumeration value="f"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="isDisabled">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="true"/>
+          <xs:enumeration value="false"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="contactInfo">
+        <xs:sequence>
+          <xs:element name="name" type="xs:string"/>
+          <xs:element name="address" type="xs:string"/>
+          <xs:element name="city" type="xs:string"/>
+          <xs:element name="phone" type="xs:string"/>
+          <xs:element name="email" type="xs:string"/>
+          <xs:element name="gender" type="xs:string"/>
+          <xs:element name="disabled" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="getContactByEmailRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="email" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getContactByEmailResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="contactId" type="xs:string"/>
+            <xs:element name="contactInfo" type="tns:contactInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getContactByNameRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getContactByNameResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="contactId" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="contactInfo" type="tns:contactInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getAllContactsRequest">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="getAllContactsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="contactId" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="contactInfo" type="tns:contactInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="serviceStatus">
+        <xs:sequence>
+          <xs:element name="statusCode" type="xs:string"/>
+          <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="addContactRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <!--< Possible Values: Athens or Thessaloniki or Patra or Kavala or Serres >-->
+            <xs:element name="city" type="tns:cities">
+              <xs:annotation>
+                <xs:documentation>Possible Values: Athens or Thessaloniki or Patra or Kavala or Serres</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="phone" type="xs:string"/>
+            <!--< Email must be unique and must follow email's format E.g email@email.com >-->
+            <xs:element name="email">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[^@]+@[^\.]+\..+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <!--< Possible Values: m or f >-->
+            <xs:element name="gender" type="tns:genders"/>
+            <!--< Possible Values: true or false >-->
+            <xs:element name="disabled" type="tns:isDisabled"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="addContactResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            <xs:element name="contactId" type="xs:string"/>
+            <xs:element name="contactInfo" type="tns:contactInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="updateContactRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="contactInfo" type="tns:contactInfo"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="updateContactResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteContactRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="email" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteContactResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="addContactResponse">
+    <wsdl:part element="sch:addContactResponse" name="addContactResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContactByNameResponse">
+    <wsdl:part element="sch:getContactByNameResponse" name="getContactByNameResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteContactResponse">
+    <wsdl:part element="sch:deleteContactResponse" name="deleteContactResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContactByEmailResponse">
+    <wsdl:part element="sch:getContactByEmailResponse" name="getContactByEmailResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllContactsResponse">
+    <wsdl:part element="sch:getAllContactsResponse" name="getAllContactsResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateContactRequest">
+    <wsdl:part element="sch:updateContactRequest" name="updateContactRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContactByNameRequest">
+    <wsdl:part element="sch:getContactByNameRequest" name="getContactByNameRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAllContactsRequest">
+    <wsdl:part element="sch:getAllContactsRequest" name="getAllContactsRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addContactRequest">
+    <wsdl:part element="sch:addContactRequest" name="addContactRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getContactByEmailRequest">
+    <wsdl:part element="sch:getContactByEmailRequest" name="getContactByEmailRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteContactRequest">
+    <wsdl:part element="sch:deleteContactRequest" name="deleteContactRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateContactResponse">
+    <wsdl:part element="sch:updateContactResponse" name="updateContactResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ContactsPort">
+    <wsdl:operation name="addContact">
+      <wsdl:input message="tns:addContactRequest" name="addContactRequest"></wsdl:input>
+      <wsdl:output message="tns:addContactResponse" name="addContactResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContactByName">
+      <wsdl:input message="tns:getContactByNameRequest" name="getContactByNameRequest"></wsdl:input>
+      <wsdl:output message="tns:getContactByNameResponse" name="getContactByNameResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteContact">
+      <wsdl:input message="tns:deleteContactRequest" name="deleteContactRequest"></wsdl:input>
+      <wsdl:output message="tns:deleteContactResponse" name="deleteContactResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContactByEmail">
+      <wsdl:input message="tns:getContactByEmailRequest" name="getContactByEmailRequest"></wsdl:input>
+      <wsdl:output message="tns:getContactByEmailResponse" name="getContactByEmailResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllContacts">
+      <wsdl:input message="tns:getAllContactsRequest" name="getAllContactsRequest"></wsdl:input>
+      <wsdl:output message="tns:getAllContactsResponse" name="getAllContactsResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateContact">
+      <wsdl:input message="tns:updateContactRequest" name="updateContactRequest"></wsdl:input>
+      <wsdl:output message="tns:updateContactResponse" name="updateContactResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ContactsPortSoap11" type="tns:ContactsPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="addContact">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="addContactRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addContactResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContactByName">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="getContactByNameRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getContactByNameResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteContact">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="deleteContactRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteContactResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContactByEmail">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="getContactByEmailRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getContactByEmailResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAllContacts">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="getAllContactsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAllContactsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateContact">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="updateContactRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateContactResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ContactsPortService">
+    <wsdl:port binding="tns:ContactsPortSoap11" name="ContactsPortSoap11">
+      <soap:address location="http://localhost:7001/soapws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:7001/soapws</con:endpoint></con:endpoints><con:operation id="878e5909-e6c2-4d3b-83eb-b078b2cbaea4" isOneWay="false" action="" name="addContact" bindingOperationName="addContact" type="Request-Response" outputName="addContactResponse" inputName="addContactRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="f2503887-a70f-4442-a67b-dc2ae33b7283" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:addContactRequest>\r
+         <con:name>?</con:name>\r
+         <con:address>?</con:address>\r
+         <con:city>?</con:city>\r
+         <con:phone>?</con:phone>\r
+         <con:email>?</con:email>\r
+         <con:gender>?</con:gender>\r
+         <con:disabled>?</con:disabled>\r
+      </con:addContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/addContactRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="bf12b131-79dc-4f5e-8a51-e013ed98da36" isOneWay="false" action="" name="deleteContact" bindingOperationName="deleteContact" type="Request-Response" outputName="deleteContactResponse" inputName="deleteContactRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="288204f2-72d7-4cf2-abb5-aa1d80d5ca24" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:deleteContactRequest>\r
+         <con:email>?</con:email>\r
+      </con:deleteContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/deleteContactRequest"/></con:call></con:operation><con:operation id="928d216f-4b31-43d3-929c-15bf915d65cf" isOneWay="false" action="" name="getAllContacts" bindingOperationName="getAllContacts" type="Request-Response" outputName="getAllContactsResponse" inputName="getAllContactsRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a5992515-e3e9-4ea4-a701-5a868b11d143" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:getAllContactsRequest/>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/getAllContactsRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="a7fb2b90-1894-4fff-bd9f-32017abf8333" isOneWay="false" action="" name="getContactByEmail" bindingOperationName="getContactByEmail" type="Request-Response" outputName="getContactByEmailResponse" inputName="getContactByEmailRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7c62c069-e81d-4b37-bd52-f48ed2ab9623" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:getContactByEmailRequest>\r
+         <con:email>?</con:email>\r
+      </con:getContactByEmailRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/getContactByEmailRequest"/></con:call></con:operation><con:operation id="f90aaea8-2202-4d8e-91cf-1dec56adb75e" isOneWay="false" action="" name="getContactByName" bindingOperationName="getContactByName" type="Request-Response" outputName="getContactByNameResponse" inputName="getContactByNameRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a5d6ab7f-8a7e-42e8-8a91-bc9018460da9" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:getContactByNameRequest>\r
+         <con:name>?</con:name>\r
+      </con:getContactByNameRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/getContactByNameRequest"/></con:call></con:operation><con:operation id="43b53732-1803-4f58-9503-056d5f718ce2" isOneWay="false" action="" name="updateContact" bindingOperationName="updateContact" type="Request-Response" outputName="updateContactResponse" inputName="updateContactRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="41a8eac1-2963-44a7-8457-e10dea32550a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:7001/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:updateContactRequest>\r
+         <con:contactInfo>\r
+            <con:name>?</con:name>\r
+            <con:address>?</con:address>\r
+            <con:city>?</con:city>\r
+            <con:phone>?</con:phone>\r
+            <con:email>?</con:email>\r
+            <con:gender>?</con:gender>\r
+            <con:disabled>?</con:disabled>\r
+         </con:contactInfo>\r
+      </con:updateContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.vpetrou.com/article-ws/ContactsPort/updateContactRequest"/></con:call></con:operation></con:interface><con:interface xsi:type="con:RestService" id="7d6b6ebb-84b1-4aaa-93b3-2386bc44526b" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://localhost:7001" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""/><con:endpoints><con:endpoint>http://localhost:7001</con:endpoint></con:endpoints><con:resource name="Delete" path="/contacts/delete" id="08b08489-e8ba-435c-9218-6ac94c51ba46"><con:settings/><con:parameters/><con:method name="Delete All Contacts" id="b8ae3728-34bf-4b0e-bc96-f75bf46b1556" method="DELETE"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>text/plain;charset=UTF-8</con:mediaType><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="d72196ff-ee5d-4adf-9741-f05bf2dbfd4b" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:7001</con:endpoint><con:request/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:testSuite id="2a4a054c-cbdd-4dd6-bf0a-de79fa3db67e" name="TS_SOAP_SRV"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="f72fb04e-b3fb-4c70-b959-9c6e8b0a8af7" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TC_SOAP_SRV_01" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="CleanupContacts" id="88c0b71f-8528-4fc6-a78a-ae3e53a6ba43"><con:settings/><con:config service="http://localhost:7001" methodName="Delete All Contacts" resourcePath="/contacts/delete" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="CleanupContacts" id="98c6c8ed-41dc-4fc2-95d0-0e43b42d306c" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}</con:endpoint><con:request/><con:originalUri>http://localhost/contacts/delete</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="528cc2cd-a40d-46ca-82bc-e012534d0e60" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:testStep type="request" name="AddNewContact" id="6e1272a8-0512-4d95-8c85-e45acfa7386c"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>addContact</con:operation><con:request name="AddNewContact" id="cb854b60-362e-4b10-95c9-248c137c8c8c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:addContactRequest>\r
+		<con:name>Name 1</con:name>
+         <con:address>Address 1</con:address>
+         <con:city>Athens</con:city>
+         <con:phone>2101111111</con:phone>
+         <con:email>mail01@mail.com</con:email>
+         <con:gender>m</con:gender>
+         <con:disabled>false</con:disabled>
+      </con:addContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="d1102e71-e2ad-4039-85f4-04862b53217e"/><con:assertion type="SOAP Fault Assertion" id="c35ffade-a68d-4797-934b-f87fa7072b15"/><con:assertion type="Simple Contains" id="af0db580-dd37-4184-b1d0-16bff5e3bb46" name="Contains SUCCESS"><con:configuration><token>SUCCESS</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="Simple Contains" id="900140a9-fac3-4919-a4e5-0172987eddb2" name="Contains Status Code SUCCESS"><con:configuration><token>(?s).*&lt;ns.*:statusCode>SUCCESS&lt;/ns.*:statusCode>.*</token><ignoreCase>false</ignoreCase><useRegEx>true</useRegEx></con:configuration></con:assertion><con:assertion type="GroovyScriptAssertion" id="c5c68b1c-6707-449f-b451-09e2cae29998" name="Script Assertion"><con:configuration><scriptText>import groovy.util.*;
+
+// Define target steps and path
+def step = "AddNewContact";
+def emailPath = "//*:email";
+
+// Create object of GroovyUtils class in order to get access to the target TestStep
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context);
+def request = groovyUtils.getXmlHolder("$step#Request");
+def response = groovyUtils.getXmlHolder("$step#Response");
+
+log.info("Expected Email: " + request.getNodeValues(emailPath).toString() + " | Actual Email: " + response.getNodeValues(emailPath).toString());
+
+assert request.getNodeValues(emailPath) == response.getNodeValues(emailPath) : "Value of Email is invalid"</scriptText></con:configuration></con:assertion><con:credentials><con:username>${#Project#username}</con:username><con:password/><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="ViewContactByEmail" id="019a90f1-f171-4e92-9ae0-9891b628e371"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>getContactByEmail</con:operation><con:request name="ViewContactByEmail" id="60944be1-ad06-405a-8dfb-3de0da9b531a"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:getContactByEmailRequest>\r
+         <con:email>mail01@mail.com</con:email>\r
+      </con:getContactByEmailRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="b3236d45-4212-4c5a-915b-f2ed88bdf68f"/><con:assertion type="SOAP Fault Assertion" id="bd7fc55d-11b8-4c83-8c9c-736b90d15451"/><con:assertion type="Simple Contains" id="77308986-912f-4e02-907d-adcb7b3ca7b4" name="Contains"><con:configuration><token>mail01@mail.com</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="AddSecondContact" id="0688a5ba-6090-4fde-b9f4-fbed4633040e"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>addContact</con:operation><con:request name="AddSecondContact" id="cb854b60-362e-4b10-95c9-248c137c8c8c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:addContactRequest>\r
+		<con:name>Name 2</con:name>
+         <con:address>Address 2</con:address>
+         <con:city>Athens</con:city>
+         <con:phone>21022222222</con:phone>
+         <con:email>mail02@mail.com</con:email>
+         <con:gender>m</con:gender>
+         <con:disabled>false</con:disabled>
+      </con:addContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="d1102e71-e2ad-4039-85f4-04862b53217e"/><con:assertion type="SOAP Fault Assertion" id="c35ffade-a68d-4797-934b-f87fa7072b15"/><con:assertion type="Simple Contains" id="af0db580-dd37-4184-b1d0-16bff5e3bb46" name="Contains SUCCESS"><con:configuration><token>SUCCESS</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="Simple Contains" id="900140a9-fac3-4919-a4e5-0172987eddb2" name="Contains Status Code SUCCESS"><con:configuration><token>(?s).*&lt;ns.*:statusCode>SUCCESS&lt;/ns.*:statusCode>.*</token><ignoreCase>false</ignoreCase><useRegEx>true</useRegEx></con:configuration></con:assertion><con:assertion type="GroovyScriptAssertion" id="c5c68b1c-6707-449f-b451-09e2cae29998" name="Script Assertion"><con:configuration><scriptText>import groovy.util.*;
+
+// Define target steps and path
+def step = "AddNewContact";
+def emailPath = "//*:email";
+
+// Create object of GroovyUtils class in order to get access to the target TestStep
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context);
+def request = groovyUtils.getXmlHolder("$step#Request");
+def response = groovyUtils.getXmlHolder("$step#Response");
+
+log.info("Expected Email: " + request.getNodeValues(emailPath).toString() + " | Actual Email: " + response.getNodeValues(emailPath).toString());
+
+assert request.getNodeValues(emailPath) == response.getNodeValues(emailPath) : "Value of Email is invalid"</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="ViewContactByName" id="a72ea598-2709-4c55-98e6-806972afeeb2"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>getContactByName</con:operation><con:request name="ViewContactByName" id="ffe34bce-1414-4829-94a2-c3a0878d509f"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:getContactByNameRequest>\r
+         <con:name>Name</con:name>\r
+      </con:getContactByNameRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="3c6a8126-3878-4252-9465-ce013c7b2506"/><con:assertion type="SOAP Fault Assertion" id="e752412a-9a3e-4fde-8737-e717bdf93c6d"/><con:assertion type="Simple Contains" id="2333f5b7-e314-4089-98e6-07647aec8b44" name="Contains Name 1"><con:configuration><token>Name 1</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="Simple Contains" id="d25acf80-e20a-43ed-80eb-87dc781362ac" name="Contains Name 2"><con:configuration><token>Name 2</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="GroovyScriptAssertion" id="0d27a6ac-92a1-45f1-913f-7173087a502b" name="Verify Name Filtering"><con:configuration><scriptText>import groovy.util.*;
+
+// Define target steps and path
+def step = "ViewContactByName";
+def namePath = "//*:name";
+ 
+// Create object of GroovyUtils class in order to get access to the target TestStep
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context);
+def request = groovyUtils.getXmlHolder("$step#Request");
+def response = groovyUtils.getXmlHolder("$step#Response");
+
+//log.info request.getNodeValues(namePath)[0].toString()
+//log.info response.getNodeValues(namePath)[0].toString()
+//log.info response.getNodeValues(namePath)[1].toString()
+//log.info response.getNodeValues(namePath).size()
+
+int responseSize = response.getNodeValues(namePath).size();
+def expectedNameValue = request.getNodeValues(namePath)[0].toString()
+for(int i=0; i&lt;responseSize; i++) {
+	def actualNameValue = response.getNodeValues(namePath)[i].toString();
+	log.info actualNameValue
+	assert actualNameValue.contains(expectedNameValue): "Name '$actualNameValue' should contain text '$expectedNameValue'"
+}
+
+</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="restrequest" name="CleanupContactsAfterTest" id="3822ae28-8f27-4a1e-8600-e41d7a5055ba"><con:settings/><con:config service="http://localhost:7001" methodName="Delete All Contacts" resourcePath="/contacts/delete" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="CleanupContactsAfterTest" id="98c6c8ed-41dc-4fc2-95d0-0e43b42d306c" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}</con:endpoint><con:request/><con:originalUri>http://localhost/contacts/delete</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="528cc2cd-a40d-46ca-82bc-e012534d0e60" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="20b7415a-f6bc-4538-8736-f5ffd5f25ac7" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TC_SOAP_SRV_N_01" searchProperties="true"><con:settings/><con:testStep type="request" name="AddContactInvalidEmail" id="e818edf6-a480-4ab0-9b9c-f61c722d61be"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>addContact</con:operation><con:request name="AddContactInvalidEmail" id="05a8ee87-009a-46f7-b3fe-91bf229725c6"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:addContactRequest>\r
+		<con:name>Name 1</con:name>
+         <con:address>Address 1</con:address>
+         <con:city>Athens</con:city>
+         <con:phone>2101111111</con:phone>
+         <con:email>mail01</con:email>
+         <con:gender>m</con:gender>
+         <con:disabled>false</con:disabled>
+      </con:addContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="2c240bfc-3874-4081-a0f9-f38522add47c"/><con:assertion type="Not SOAP Fault Assertion" id="b81bee7a-d2d2-47f6-840c-6c5bce210ffe" name="SOAP Fault"/><con:assertion type="Simple Contains" id="563f19d6-df3b-4cb0-816d-14c95e2fa5d7" name="Contains Validation error"><con:configuration><token>Validation error</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="Simple Contains" id="25c8b5c7-eebc-457e-8929-d1bfc400893d" name="Contains Facet Valid error description"><con:configuration><token>Value 'mail01' is not facet-valid with respect to pattern '[^@]+@[^\.]+\..+' for type</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="8d69d8e4-b3da-40a2-8f36-479ff553386c" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TC_SOAP_SRV_N_02" searchProperties="true"><con:settings/><con:testStep type="request" name="AddContactInvalidGender" id="e1b6c4c3-0b62-4e2b-b3fe-071aad47e528"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContactsPortSoap11</con:interface><con:operation>addContact</con:operation><con:request name="AddContactInvalidGender" id="05a8ee87-009a-46f7-b3fe-91bf229725c6"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#protocol}://${#Project#host}:${#Project#port}/soapws</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://www.vpetrou.com/contact-ws">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <con:addContactRequest>\r
+		<con:name>Name 1</con:name>
+         <con:address>Address 1</con:address>
+         <con:city>Athens</con:city>
+         <con:phone>2101111111</con:phone>
+         <con:email>mail01@mail.com</con:email>
+         <con:gender>ERROR</con:gender>
+         <con:disabled>false</con:disabled>
+      </con:addContactRequest>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response" id="2c240bfc-3874-4081-a0f9-f38522add47c"/><con:assertion type="Not SOAP Fault Assertion" id="b81bee7a-d2d2-47f6-840c-6c5bce210ffe" name="SOAP Fault"/><con:assertion type="Simple Contains" id="563f19d6-df3b-4cb0-816d-14c95e2fa5d7" name="Contains Validation error"><con:configuration><token>Validation error</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:assertion type="Simple Contains" id="25c8b5c7-eebc-457e-8929-d1bfc400893d" name="Contains Facet Valid error description"><con:configuration><token>Value 'ERROR' is not facet-valid with respect to enumeration '[m, f]'</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>protocol</con:name><con:value>http</con:value></con:property><con:property><con:name>host</con:name><con:value>localhost</con:value></con:property><con:property><con:name>port</con:name><con:value>7001</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
